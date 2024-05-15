@@ -21,81 +21,74 @@ Execute the C Program for the desired output.
 
 ## 1.To Write a C program that illustrates files copying 
 ```
-#include <unistd.h>
-#include <sys/stat.h>
+1. To Write a C program that illustrates files copying
+include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
 int main()
 {
-    char block[1024];
-    int in, out;
-    int nread;
-    in = open("filecopy.c", O_RDONLY);
-    out = open("file.out", O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
-    while((nread = read(in,block,sizeof(block))) > 0)
-    write(out,block,nread);
-    exit(0);}
-```
-
-### OUTPUT
-![WhatsApp Image 2024-05-06 at 15 19 40_77a44fdd](https://github.com/23012653/Linux-File-IO-Systems-locking/assets/150777517/f6b6e808-af06-484b-ae20-b9170d0be5c3)
+char block[1024];
+int in, out;
+int nread;
+in = open("filecopy.c", O_RDONLY);
+out = open("file.out", O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
+while((nread = read(in,block,sizeof(block))) > 0)
+write(out,block,nread);
+exit(0);}
 
 
-
-
-
-
-
-## 2.To Write a C program that illustrates files locking
-```
+2.To Write a C program that illustrates files locking
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/file.h>
 int main (int argc, char* argv[])
-{
-    char* file = argv[1];
-    int fd;
-    struct flock lock;
-    printf ("opening %s\n", file);
-    fd = open (file, O_WRONLY);
-    if (flock(fd, LOCK_SH) == -1)
-    {
-        printf("error");
-    }
-    else
-    {
-        printf("Acquiring shared lock using flock");
-    }
-    getchar();
-    if (flock(fd, LOCK_EX | LOCK_NB) == -1)
-    {
-        printf("error");
-    }
-    else
-    {
-        printf("Acquiring exclusive lock using flock");
-    }
-    getchar();
-    if (flock(fd, LOCK_UN) == -1)
-    {
-        printf("error");
-    }
-    else
-    {
-        printf("unlocking");
-    }
-    getchar();
-    close (fd);
-    return 0;
+{ char* file = argv[1];
+ int fd;
+ struct flock lock;
+ printf ("opening %s\n", file);
+ /* Open a file descriptor to the file. */
+ fd = open (file, O_WRONLY);
+// acquire shared lock
+if (flock(fd, LOCK_SH) == -1) {
+    printf("error");
+}else
+{printf("Acquiring shared lock using flock");
 }
+getchar();
+// non-atomically upgrade to exclusive lock
+// do it in non-blocking mode, i.e. fail if can't upgrade immediately
+if (flock(fd, LOCK_EX | LOCK_NB) == -1) {
+    printf("error");
+}else
+{printf("Acquiring exclusive lock using flock");}
+getchar();
+// release lock
+// lock is also released automatically when close() is called or process exits
+if (flock(fd, LOCK_UN) == -1) {
+    printf("error");
+}else{
+printf("unlocking");
+}
+getchar();
+close (fd);
+return 0;
+}
+
 ```
 
+### OUTPUT
+C program that illustrates files copying
+![image](https://github.com/23012653/Linux-File-IO-Systems-locking/assets/150777517/fc8aeb3d-151d-4e40-843b-b03dbdcbb94b)
 
 
-## OUTPUT
-![WhatsApp Image 2024-05-06 at 15 20 01_3158ea49](https://github.com/23012653/Linux-File-IO-Systems-locking/assets/150777517/099b5521-6205-4052-88b9-9c3c9fdd7e2d)
+C program that illustrates files locking
+![image](https://github.com/23012653/Linux-File-IO-Systems-locking/assets/150777517/0321b26b-fb5d-469c-b48b-444224965a91)
+
+
+
+
 
 
 
