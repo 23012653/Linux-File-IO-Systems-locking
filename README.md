@@ -35,10 +35,11 @@ out = open("file.out", O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
 while((nread = read(in,block,sizeof(block))) > 0)
 write(out,block,nread);
 exit(0);}
+```
 
 ## 1.To Write a C program that illustrates files locking
 
-
+```
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
